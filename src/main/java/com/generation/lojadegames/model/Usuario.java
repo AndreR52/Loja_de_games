@@ -1,6 +1,6 @@
 package com.generation.lojadegames.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,9 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,8 +39,8 @@ public class Usuario {
 	
 	private String foto;
 	
-	@UpdateTimestamp
-	private LocalDateTime data;
+	@NotNull
+	private LocalDate dataNascimento;
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
@@ -88,12 +87,12 @@ public class Usuario {
 		this.foto = foto;
 	}
 
-	public LocalDateTime getData() {
-		return data;
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
 	}
 
-	public void setData(LocalDateTime data) {
-		this.data = data;
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public List<Produto> getProduto() {

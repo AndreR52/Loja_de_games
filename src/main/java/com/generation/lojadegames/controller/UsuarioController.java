@@ -19,18 +19,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
 import com.generation.lojadegames.model.Usuario;
+import com.generation.lojadegames.model.UsuarioLogin;
 import com.generation.lojadegames.repository.UsuarioRepository;
-
-
+import com.generation.lojadegames.service.UsuarioService;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuarios")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioController {
 	
 	@Autowired
+	private UsuarioService usuarioService;
+	
+	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@PostMapping("/logar")
+	public ResponseEntity<UsuarioLogin> Autentication(@RequestBody Optional<UsuarioLogin> user){
+		return usuarioService.autenticarUsuario(user)
+				.map(resposta -> ResponseEntity.ok(resposta))
+				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+	}
+	
+	@PostMapping("/cadastrar")
+	public ResponseEntity<Usuario> Post(@RequestBody Usuario usuario) {
+		return 	usuarioService.cadastrarusuario(usuario)
+				.map(respostacadas -> ResponseEntity.status(HttpStatus.CREATED).body(respostacadas))
+				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+	}
 	
 	@GetMapping
 	public ResponseEntity<List<Usuario>> getAll(){
@@ -68,7 +86,7 @@ public class UsuarioController {
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public void deleteUsuario(@PathVariable Long id) {
+	public void deleteUsuario(@PathVariable Long id) {	
 		
 		Optional<Usuario> post = usuarioRepository.findById(id);
 		
